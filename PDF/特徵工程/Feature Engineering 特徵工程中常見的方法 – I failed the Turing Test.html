@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#" class="no-js">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="/cdn-cgi/apps/head/Lcrky_PoLN6GSCfFHHieFe3VZiA.js"></script><link rel="profile" href="https://gmpg.org/xfn/11">
+<script>(function(html){html.className = html.className.replace(/\bno-js\b/,'js')})(document.documentElement);</script>
+<title>Feature Engineering 特徵工程中常見的方法 &#8211; I failed the Turing Test</title>
+
+<meta name="google-site-verification" content="GeOgYj8NraRceIEsgtxNal3vk0rwQMyCmbWcSUTqSYo" />
+<link rel='dns-prefetch' href='//s0.wp.com' />
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="I failed the Turing Test &raquo; Feed" href="https://vinta.ws/code/feed" />
+<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11.2.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11.2.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/vinta.ws\/code\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.1.1"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56760,9792,65039],[55358,56760,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='cute_profiles_headcss-css' href='https://vinta.ws/code/wp-content/plugins/cute-profiles/css/skins/default/32/style.css?ver=1.2.1' type='text/css' media='all' />
+<link rel='stylesheet' id='cute_sharing_headcss-css' href='https://vinta.ws/code/wp-content/plugins/cute-profiles/css/skins/default/sharing/32/style.css?ver=1.2.1' type='text/css' media='all' />
+<link rel='stylesheet' id='wp-block-library-css' href='https://vinta.ws/code/wp-includes/css/dist/block-library/style.min.css?ver=5.1.1' type='text/css' media='all' />
+<link rel='stylesheet' id='featured-image-generator-css' href='https://vinta.ws/code/wp-content/plugins/featured-image-generator/public/css/featured-image-generator-public.css?ver=1.0.0' type='text/css' media='all' />
+<link rel='stylesheet' id='pc_google_analytics-frontend-css' href='https://vinta.ws/code/wp-content/plugins/pc-google-analytics/assets/css/frontend.css?ver=1.0.0' type='text/css' media='all' />
+<link rel='stylesheet' id='jgtstork-fonts-css' href='https://fonts.googleapis.com/css?family=Karla%3A400%2C400i%2C700%2C700i' type='text/css' media='all' />
+<link rel='stylesheet' id='jgtstork-style-css' href='https://vinta.ws/code/wp-content/themes/stork/style.css?ver=5.1.1' type='text/css' media='all' />
+<!--[if lt IE 9]>
+<link rel='stylesheet' id='jgtstork-ie-css'  href='https://vinta.ws/code/wp-content/themes/stork/css/ie.css?ver=1.6.0' type='text/css' media='all' />
+<![endif]-->
+<link rel='stylesheet' id='wp-gfm-css' href='https://vinta.ws/code/wp-content/plugins/wp-gfm/css/markdown.css?ver=0.11' type='text/css' media='all' />
+<link rel='stylesheet' id='social-logos-css' href='https://vinta.ws/code/wp-content/plugins/jetpack/_inc/social-logos/social-logos.min.css?ver=1' type='text/css' media='all' />
+<link rel='stylesheet' id='jetpack_css-css' href='https://vinta.ws/code/wp-content/plugins/jetpack/css/jetpack.css?ver=7.2.1' type='text/css' media='all' />
+<script type='text/javascript' src='https://vinta.ws/code/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
+<script type='text/javascript' src='https://vinta.ws/code/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var related_posts_js_options = {"post_heading":"h4"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://vinta.ws/code/wp-content/plugins/jetpack/_inc/build/related-posts/related-posts.min.js?ver=20190204'></script>
+<script type='text/javascript' src='https://vinta.ws/code/wp-content/plugins/featured-image-generator/public/js/featured-image-generator-public.js?ver=1.0.0'></script>
+<script type='text/javascript' src='https://vinta.ws/code/wp-content/plugins/pc-google-analytics/assets/js/frontend.min.js?ver=1.0.0'></script>
+<!--[if lt IE 9]>
+<script type='text/javascript' src='https://vinta.ws/code/wp-content/themes/stork/js/html5.js?ver=3.7.3'></script>
+<![endif]-->
+<link rel='https://api.w.org/' href='https://vinta.ws/code/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://vinta.ws/code/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://vinta.ws/code/wp-includes/wlwmanifest.xml" />
+<link rel='prev' title='碼天狗週刊 第 99 期 @vinta - Apache Spark, Python, Machine Learning, Feature Engineering, Testing, Linux' href='https://vinta.ws/code/vinta-on-codetengu-weekly-issue-99-apache-spark-python-machine-learning-feature-engineering-testing-linux.html' />
+<link rel='next' title='Setup Spark, Scala and Maven with Intellij IDEA' href='https://vinta.ws/code/setup-spark-scala-and-maven-with-intellij-idea.html' />
+<meta name="generator" content="WordPress 5.1.1" />
+<link rel="canonical" href="https://vinta.ws/code/feature-engineering.html" />
+<link rel='shortlink' href='https://vinta.ws/code/?p=417' />
+<link rel="alternate" type="application/json+oembed" href="https://vinta.ws/code/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fvinta.ws%2Fcode%2Ffeature-engineering.html" />
+<link rel="alternate" type="text/xml+oembed" href="https://vinta.ws/code/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fvinta.ws%2Fcode%2Ffeature-engineering.html&#038;format=xml" />
+<style type="text/css" media="screen">
+	div.cute_profiles_style{
+	top:236px;
+	right:0px;
+	}
+				.cute_profiles_style {background:#ffffff !important;}
+			
+	div.cute_profiles_style a.cute_profiles_0 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_1 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_2 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_3 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_4 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_5 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_6 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_7 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_8 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_9 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_10 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_11 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_12 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_13 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_14 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_15 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_16 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_17 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_18 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_19 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_20 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_21 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_22 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_23 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_24 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_25 {background-size:32px 32px;}div.cute_profiles_style a.cute_profiles_26 {background-size:32px 32px;}	div.cute_profiles_style a.cute_profiles_27 {background:url(https://files.vinta.ws/static/icons/github.png) no-repeat 0 0;background-size:32px 32px;}
+		div.cute_profiles_style a.cute_profiles_29 {background:url(https://s3-ap-northeast-1.amazonaws.com/files.vinta.ws/static/icons/codetengu.png) no-repeat 0 0;background-size:32px 32px;}
+		div.cute_profiles_style a.cute_profiles_28 {background:url(https://heelsfetishism.com/static/favicons/favicon_75.png) no-repeat 0 0;background-size:32px 32px;}
+		.cute_profiles_none {display:none;}
+	.cute_profiles_wclass .cute_profiles_style {top: inherit;
+	right: inherit;
+	position: inherit;padding: 5px 0px 5px 5px;}
+	.cute_profiles_wclass .cute_profiles_i{margin-right: 5px !important;}
+	</style>
+<style type="text/css" media="screen">
+	div.cute_sharing_style{
+	top:325px;
+	left:0px;
+	}
+				.cute_sharing_style {background:#ffffff !important;}
+			
+	div.cute_sharing_style a.cute_sharing_0 {background-size:32px 32px;}div.cute_sharing_style a.cute_sharing_1 {background-size:32px 32px;}div.cute_sharing_style a.cute_sharing_2 {background-size:32px 32px;}div.cute_sharing_style a.cute_sharing_3 {background-size:32px 32px;}div.cute_sharing_style a.cute_sharing_4 {background-size:32px 32px;}	.cute_sharing_none {display:none;}
+	.cute_sharing_wclass .cute_sharing_style {top: inherit;
+	right: inherit;
+	position: inherit;padding: 5px 0px 8px 0px;}
+	.cute_sharing_wclass .cute_sharing_i{margin-right: 5px !important;}
+	.cute_sharing_afterpost .cute_sharing_i {padding:0 4px;}
+	</style>
+<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		
+		ga('create', 'UA-510626-2', 'auto');
+		ga('send', 'pageview');
+		
+		</script>
+<style type='text/css'>img#wpstats{display:none}</style> <style type="text/css" id="wp-custom-css">
+				/*
+Welcome to Custom CSS!
+
+To learn how this works, see http://wp.me/PEmnE-Bt
+
+.wp-post-image {
+	margin: 0 auto 20px;
+}
+*/
+
+html {
+	font-size: 16px;
+	font-family: Menlo, 'Source Sans Pro', 'Helvetica Neue', Helvetica, sans-serif;
+	-webkit-font-smoothing: antialiased;
+}
+
+body {
+  line-height: 1.4;
+	word-wrap: break-word;
+}
+
+h1 {
+  font-size: 28px;
+}
+
+h2 {
+  font-size: 24px;
+  line-height: 34px;
+	letter-spacing: -2px;
+	padding-top: 20px;
+	padding-bottom: 4px;
+	margin-bottom: 28px !important;
+	border-bottom: 1px solid #CFD8DC;
+}
+
+h3 {
+  font-size: 18px;
+  line-height: 28px;
+	padding-top: 20px;
+	padding-bottom: 4px;
+	margin-bottom: 22px !important;
+	border-bottom: 1px dashed  #CFD8DC;
+}
+
+ul {
+	list-style-type: square;
+}
+
+ul li {
+	padding-top: 3px;
+	padding-bottom: 2px;
+}
+
+ol li {
+	margin-left: 10px;
+	padding-top: 3px;
+	padding-bottom: 2px;	
+} 
+
+p {
+  margin: 0 0 20px 0;
+	word-break: normal;
+}
+
+blockquote {
+	font-size: 16px;
+}
+
+pre {
+	background: #1f1f1f;
+	color: #DCDCDC;
+	font-size: 14px;
+	padding: 5px;
+	white-space: pre !important;
+	word-wrap: normal !important;
+}
+
+code {
+	background-color: rgba(0,0,0,0.08);
+	padding-left: .3em;
+	padding-right: .3em;
+}
+
+#content .inner {
+  max-width: 880px;
+}
+
+.site-title {
+	font-size: 32px;
+}
+
+.entry-title {
+	line-height: 40px;
+	padding: 20px 0 20px 0;
+	margin-bottom: 28px !important;
+	border-bottom: 1px solid #CFD8DC;
+}
+
+.entry-content {
+  margin: 0 auto;
+  max-width: 780px;
+}
+
+.hentry, .page-content {
+	margin-bottom: 40px;
+	padding-bottom: 20px;
+}
+
+.site-content article {
+	border-bottom: 2px dashed #CFD8DC;
+}
+
+.markdown-content a {
+	white-space: nowrap;
+}
+
+.tag p,
+.tag li {
+	color: #333;
+}
+
+@media only screen and (max-width: 1200px) {
+	#archives-2 {
+		display: none;
+	}
+	
+	.cute_profiles_style {
+		display: none;
+	}
+}			</style>
+
+
+<meta property="og:site_name" content="I failed the Turing Test" />
+<meta property="og:title" content="Feature Engineering 特徵工程中常見的方法" />
+<meta property="og:url" content="https://vinta.ws/code/feature-engineering.html" />
+<meta property="og:type" content="article" />
+<meta property="og:description" content="Feature Engineering 是個手藝活，講求的是創造力。" />
+<meta property="og:image" content="https://files.vinta.ws/code/wp-content/uploads/2017/08/fig-09-08-2017_15-53-36.jpg" />
+<meta property="og:image:url" content="https://files.vinta.ws/code/wp-content/uploads/2017/08/fig-09-08-2017_15-53-36.jpg" />
+<meta property="og:image:secure_url" content="https://files.vinta.ws/code/wp-content/uploads/2017/08/fig-09-08-2017_15-53-36.jpg" />
+
+<meta itemprop="name" content="Feature Engineering 特徵工程中常見的方法" />
+<meta itemprop="headline" content="Feature Engineering 特徵工程中常見的方法" />
+<meta itemprop="description" content="Feature Engineering 是個手藝活，講求的是創造力。" />
+<meta itemprop="image" content="https://files.vinta.ws/code/wp-content/uploads/2017/08/fig-09-08-2017_15-53-36.jpg" />
+<meta itemprop="datePublished" content="2017-08-09" />
+<meta itemprop="dateModified" content="2017-11-02T15:30:44+08:00" />
+<meta itemprop="author" content="vinta" />
+ 
+
+<meta name="twitter:title" content="Feature Engineering 特徵工程中常見的方法" />
+<meta name="twitter:url" content="https://vinta.ws/code/feature-engineering.html" />
+<meta name="twitter:description" content="Feature Engineering 是個手藝活，講求的是創造力。" />
+<meta name="twitter:image" content="https://files.vinta.ws/code/wp-content/uploads/2017/08/fig-09-08-2017_15-53-36.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@vinta" />
+
+
+
+
+</head>
+<body class="post-template-default single single-post postid-417 single-format-standard single-author no-avatars">
+<div id="page" class="site">
+<header class="site-header">
+<div class="inner">
+<p class="site-title"><a href="https://vinta.ws/code/" rel="home">I failed the Turing Test</a></p>
+<p class="site-description"></p>
+</div> 
+</header>
+<nav class="site-navigation" aria-label="Menu">
+<div class="menu-wrap"><ul id="menu-hi" class="menu"><li id="menu-item-45" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-45"><a href="https://vinta.ws/code/category/about-python">Python</a></li>
+<li id="menu-item-285" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-285"><a href="https://vinta.ws/code/category/about-machine-learning">Machine Learning</a></li>
+<li id="menu-item-420" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-420"><a href="https://vinta.ws/code/category/about-big-data">Big Data</a></li>
+<li id="menu-item-439" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-439"><a href="https://vinta.ws/code/category/about-web-development">Web Development</a></li>
+<li id="menu-item-50" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-50"><a href="https://vinta.ws/code/category/about-database">Database</a></li>
+<li id="menu-item-81" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-81"><a href="https://vinta.ws/code/category/about-devops">DevOps</a></li>
+<li id="menu-item-85" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-85"><a href="https://vinta.ws/code/category/about-misc">Misc</a></li>
+</ul></div> <a href="#" id="menu-toggle" title="Show Menu"><i aria-hidden="true" class="icon-plus"></i></a>
+</nav> <div id="content" class="site-content">
+<main id="main" class="site-main inner">
+<article id="post-417" class="post-417 post type-post status-publish format-standard has-post-thumbnail hentry category-about-machine-learning tag-feature-engineering tag-machine-learning">
+<div class="post-thumbnail">
+<img width="780" height="300" src="https://files.vinta.ws/code/wp-content/uploads/2017/08/fig-09-08-2017_15-53-36.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" /> </div>
+<header class="entry-header">
+<h1 class="entry-title">Feature Engineering 特徵工程中常見的方法</h1> <div class="entry-meta">
+<span class="posted-on"><span class="screen-reader-text">Posted on </span><a href="https://vinta.ws/code/feature-engineering.html" rel="bookmark"><time class="entry-date published" datetime="2017-08-09T23:53:51+08:00">2017/08/09</time><time class="updated" datetime="2017-11-02T15:30:44+08:00">2017/11/02</time></a></span><span class="entry-author"><span class="author vcard"><span class="screen-reader-text">Author </span><a class="url fn n" href="https://vinta.ws/code/author/vinta">vinta</a></span></span><span class="cat-links"><span class="screen-reader-text">Posted in </span><a href="https://vinta.ws/code/category/about-machine-learning" rel="category tag">Machine Learning</a></span> </div>
+</header>
+<div class="entry-content">
+<div class="markdown-body markdown-content">
+<p>Feature Engineering 是把 raw data 轉換成 features 的整個過程的總稱。基本上特徵工程就是個手藝活，講求的是創造力。</p>
+<p>本文不定期更新中。</p>
+<h2 id="gfm-1">Missing Value Imputation</h2>
+<p>最簡單暴力的做法當然就是直接 drop 掉那些含有缺失值的 rows。</p>
+<p>針對 numerical 特徵的缺失值，可以用以下方式取代：</p>
+<ul>
+<li><code>0</code>，缺點是可能會混淆其他本來就是 0 的數值</li>
+<li><code>-999</code>，用某個正常情況下不會出現的數值代替，但是選得不好可能會變成異常值，要特別對待</li>
+<li>Mean，平均數</li>
+<li>Median，中位數，跟平均數相比，不會被異常值干擾</li>
+</ul>
+<p>針對 categorical 特徵的缺失值，可以用以下方式取代：</p>
+<ul>
+<li>Mode，眾數，最常見的值</li>
+<li>改成 "Others" 之類的值</li>
+</ul>
+<p>假設你要填補 <code>age</code> 這個特徵，然後你有其他例如 <code>gender</code> 這樣的特徵，你可以分別計算男性和女性的 <code>age</code> 的 mean、median 和 mode 來填補缺失值；更複雜一點的方式是，你可以把沒有缺失值的數據挑出來，用它們來訓練一個 regression 或 classification 模型，用這個模型來預測缺失值。</p>
+<p>不過其實有些演算法是可以容許缺失值的，這時候可以新增一個 <code>has_missing_value</code> 欄位（稱為 NA indicator column）。</p>
+<p>ref:<br />
+<a href="http://adataanalyst.com/machine-learning/comprehensive-guide-feature-engineering/">http://adataanalyst.com/machine-learning/comprehensive-guide-feature-engineering/</a><br />
+<a href="https://stats.stackexchange.com/questions/28860/why-adding-an-na-indicator-column-instead-of-value-imputation-for-randomforest">https://stats.stackexchange.com/questions/28860/why-adding-an-na-indicator-column-instead-of-value-imputation-for-randomforest</a></p>
+<h2 id="gfm-2">Outliers Detection</h2>
+<p>發現離群值最直觀的方式就是畫圖表，針對單一特徵可以使用 box plot；兩兩特徵則可以使用 scatter plot。</p>
+<p>處置離群值的方式通常是直接刪除或是做變換（例如 log transformation 或 binning），當然你也可以套用處理缺失值的方式。</p>
+<p>ref:<br />
+<a href="https://www.analyticsvidhya.com/blog/2016/01/guide-data-exploration/">https://www.analyticsvidhya.com/blog/2016/01/guide-data-exploration/</a><br />
+<a href="https://www.douban.com/note/413022836/">https://www.douban.com/note/413022836/</a></p>
+<h2 id="gfm-3">Duplicate Entries Removal</h2>
+<p>duplicate 或 redundant 尤其指的是那些 features 都一樣，但是 target variable 卻不同的數據。</p>
+<h2 id="gfm-4">Feature Scaling 特徵縮放</h2>
+<h3 id="gfm-5">Standardization 標準化</h3>
+<p>原始資料中，因為各個特徵的含義和單位不同，每個特徵的取值範圍可能會差異很大。例如某個二元特徵的範圍是 0 或 1，另一個價格特徵的範圍可能是 [0, 1000000]，由於取值範圍相差過大導致了模型可能會更偏向於取值範圍較大的那個特徵。解決的辦法就是把各種不同 scale 的特徵轉換成同樣的 scale，稱為標準化或正規化。</p>
+<p>狹義來說，標準化專門指的是透過計算 z-score，讓數據的 mean 為 0、 variance 為 1。</p>
+<p>ref:<br />
+<a href="https://spark.apache.org/docs/latest/ml-features.html#standardscaler">https://spark.apache.org/docs/latest/ml-features.html#standardscaler</a><br />
+<a href="http://scikit-learn.org/stable/modules/preprocessing.html#standardization-or-mean-removal-and-variance-scaling">http://scikit-learn.org/stable/modules/preprocessing.html#standardization-or-mean-removal-and-variance-scaling</a><br />
+<a href="https://www.quora.com/How-bad-is-it-to-standardize-dummy-variables">https://www.quora.com/How-bad-is-it-to-standardize-dummy-variables</a></p>
+<h3 id="gfm-6">Normalization 歸一化、正規化</h3>
+<p>歸一化是指把每個樣本縮放到單位範數（每個樣本的範數為 1），適用於計算 dot product 或者兩個樣本之間的相似性。除了標準化、歸一化之外，其他還有透過最大、最小值，把數據的範圍縮放到 [0, 1] 或 [-1, 1] 的區間縮放法，不過這個方法容易受異常值的影響。</p>
+<p>標準化是分別對單一特徵進行（針對 column）；歸一化是對每個 observation 進行（針對 row）。</p>
+<p>對 SVM、logistic regression 或其他使用 squared loss function 的演算法來說，需要 standardization；對 Vector Space Model 來說，需要 normalization；至於 tree-based 的演算法，基本上都不需要標準化或歸一化，它們對 scale 不敏感。</p>
+<p>ref:<br />
+<a href="https://spark.apache.org/docs/latest/ml-features.html#normalizer">https://spark.apache.org/docs/latest/ml-features.html#normalizer</a><br />
+<a href="http://scikit-learn.org/stable/modules/preprocessing.html#normalization">http://scikit-learn.org/stable/modules/preprocessing.html#normalization</a><br />
+<a href="https://www.qcloud.com/community/article/689521">https://www.qcloud.com/community/article/689521</a></p>
+<h2 id="gfm-7">Feature Transformation 特徵變換</h2>
+<p>以下適用 continuous 特徵：</p>
+<h3 id="gfm-8">Rounding</h3>
+<p>某些精度有到小數點後第 n 位的特徵，如果你其實不需要那麼精確，可以考慮 <code>round(value * m)</code> 或 <code>round(log(value))</code> 這樣的做法，甚至可以把 round 之後的數值當成 categorical 特徵。</p>
+<pre class="prettyprint lang-txt" title="">confidence  round(confidence * 10)
+0.9594      10
+0.1254      1
+0.1854      2
+0.5454      5
+0.3655      4
+</pre>
+<h3 id="gfm-9">Log Transformation</h3>
+<p>因為 x 越大，log(x) 增長的速度就越慢，所以取 log 的意義是可以 compress 大數和 expand 小數，換句話說就是壓縮 "long tail" 和展開 "head"。假設 x 原本的範圍是 [100, 1000]，<code>log(x, 10)</code> 之後的範圍就變成 [2, 3] 了。也常常使用 <code>log(1 + x)</code> 或 <code>log(x / (1 - x))</code>。</p>
+<p>另外一種類似的做法是 square root 平方根或 cube root 立方根（可以用在負數）。</p>
+<p>ref:<br />
+<a href="https://www.safaribooksonline.com/library/view/mastering-feature-engineering/9781491953235/ch02.html">https://www.safaribooksonline.com/library/view/mastering-feature-engineering/9781491953235/ch02.html</a></p>
+<h3 id="gfm-10">Binarization 二值化</h3>
+<p>對數值型的數據設定一個 threshold，大於就賦值為 1、小於就賦值為 0。例如 <code>score</code>，如果你只關心「及格」或「不及格」，可以直接把成績對應到 1（<code>score &gt;= 60</code>）和 0（<code>score &lt; 60</code>）。或是你要做啤酒銷量分析，你可以新增一個 <code>age &gt;= 18</code> 的特徵來標示出已成年。</p>
+<p>你有一個 <code>color</code> 的 categorical 特徵，如果你不在乎實際上是什麼顏色的話，其實也可以改成 <code>has_color</code>。</p>
+<p>ref:<br />
+<a href="https://spark.apache.org/docs/latest/ml-features.html#binarizer">https://spark.apache.org/docs/latest/ml-features.html#binarizer</a></p>
+<h3 id="gfm-11">Binning</h3>
+<p>也稱為 bucketization。</p>
+<p>以 <code>age</code> 這樣的特徵為例，你可以把所有年齡拆分成 n 段，0-20 歲、20-40 歲、40-60 歲等或是 0-18 歲、18-40 歲、40-70 歲等（等距或等量），然後把個別的年齡對應到某一段，假設 26 歲是對應到第二個 bucket，那新特徵的值就是 2。這種方式是人為地指定每個 bucket 的邊界值，還有另外一種拆分法是根據數據的分佈來拆，稱為 quantization 或 quantile binning，你只需要指定 bucket 的數量即可。</p>
+<p>同樣的概念應用到其他地方，可以把 datetime 特徵拆分成上午、中午、下午和晚上；如果是 categorical 特徵，則可以先 <code>SELECT count() ... GROUP BY</code>，然後把出現次數小於某個 threshold 的值改成 "Other" 之類的。或者是你有一個 <code>occupation</code> 特徵，如果你其實不需要非常準確的職業資訊的話，可以把 "Web Developer"、"iOS Developer" 或 "DBA" 這些個別的資料都改成 "Software Engineer"。</p>
+<p>binarization 和 binning 都是對 continuous 特徵做 discretization 離散化，增強模型的非線性泛化能力。</p>
+<p>ref:<br />
+<a href="https://spark.apache.org/docs/latest/ml-features.html#bucketizer">https://spark.apache.org/docs/latest/ml-features.html#bucketizer</a><br />
+<a href="https://spark.apache.org/docs/latest/ml-features.html#quantilediscretizer">https://spark.apache.org/docs/latest/ml-features.html#quantilediscretizer</a><br />
+<a href="https://github.com/collectivemedia/spark-ext#optimal-binning">https://github.com/collectivemedia/spark-ext#optimal-binning</a><br />
+<a href="https://www.qcloud.com/community/article/689521">https://www.qcloud.com/community/article/689521</a></p>
+<p>以下適用 categorical 特徵：</p>
+<p>ref:<br />
+<a href="https://en.wikipedia.org/wiki/Categorical_variable">https://en.wikipedia.org/wiki/Categorical_variable</a><br />
+<a href="https://www.safaribooksonline.com/library/view/introduction-to-machine/9781449369880/ch04.html">https://www.safaribooksonline.com/library/view/introduction-to-machine/9781449369880/ch04.html</a></p>
+<h3 id="gfm-12">Integer Encoding</h3>
+<p>也稱為 label encoding。</p>
+<p>把每個 category 對應到數字，一種做法是隨機對應到 0, 1, 2, 3, 4 等數字；另外一種做法是依照該值出現的頻率大小的順序來給值，例如最常出現的值給 0，依序給 1, 2, 3 等等。如果是針對一些在某種程度上有次序的 categorical 特徵（稱為 ordinal），例如「鑽石會員」「白金會員」「黃金會員」「普通會員」，直接 mapping 成數字可能沒什麼問題，但是如果是類似 <code>color</code> 或 <code>city</code> 這樣的沒有明顯大小的特徵的話，還是用 one-hot encoding 比較合適。不過如果用的是 tree-based 的演算法就無所謂了。</p>
+<p>有些 categorical 特徵也可能會用數字表示（例如 id），跟 continuous 特徵的差別是，數值的差異或大小對 categorical 特徵來說沒有太大的意義。</p>
+<p>ref:<br />
+<a href="https://breezedeus.github.io/2014/11/15/breezedeus-feature-processing.html">http://breezedeus.github.io/2014/11/15/breezedeus-feature-processing.html</a><br />
+<a href="http://phunters.lofter.com/post/86d56_194e956">http://phunters.lofter.com/post/86d56_194e956</a></p>
+<h3 id="gfm-13">One-hot Encoding (OHE)</h3>
+<p>如果某個特徵有 m 種值（例如 Taipei, Beijing, Tokyo），那它 one-hot encode 之後就會變成長度為 m 的向量：</p>
+<pre class="prettyprint lang-txt" title="">city    city_Taipei city_Beijing city_tokyo
+Taipei  1           0            0
+Beijing 0           1            0
+Tokyo   0           0            1
+</pre>
+<p>你也可以改用 Dummy coding，這樣就只需要產生長度為 m -1 的向量：</p>
+<pre class="prettyprint lang-txt" title="">city    city_Taipei city_Beijing
+Taipei  1           0
+Beijing 0           1
+Tokyo   0           0
+</pre>
+<p>OHE 的缺點是容易造成特徵的維度大幅增加和沒辦法處理之前沒見過的值。</p>
+<p>ref:<br />
+<a href="http://scikit-learn.org/stable/modules/preprocessing.html#preprocessing-categorical-features">http://scikit-learn.org/stable/modules/preprocessing.html#preprocessing-categorical-features</a><br />
+<a href="https://blog.myyellowroad.com/using-categorical-data-in-machine-learning-with-python-from-dummy-variables-to-deep-category-66041f734512">https://blog.myyellowroad.com/using-categorical-data-in-machine-learning-with-python-from-dummy-variables-to-deep-category-66041f734512</a></p>
+<h3 id="gfm-14">Bin-counting</h3>
+<p>例如在 Computational Advertising 中，如果你有針對每個 user 的「廣告曝光數（包含點擊和未點擊）」和「廣告點擊數」，你就可以算出每個 user 的「點擊率」，然後用這個機率來表示每個 user，反之也可以對 ad id 使用類似的做法。</p>
+<pre class="prettyprint lang-txt" title="">ad_id   ad_views  ad_clicks  ad_ctr
+412533  18339     1355       0.074
+423334  335       12         0.036
+345664  1244      132        0.106
+349833  35387     1244       0.035
+</pre>
+<p>ref:<br />
+<a href="https://blogs.technet.microsoft.com/machinelearning/2015/02/17/big-learning-made-easy-with-counts/">https://blogs.technet.microsoft.com/machinelearning/2015/02/17/big-learning-made-easy-with-counts/</a></p>
+<p>換個思路，如果你有一個 <code>brand</code> 的特徵，然後你可以從 user 的購買記錄中找出購買 A 品牌的人，有 70% 的人會購買 B 品牌、有 40% 的人會購買 C 品牌；購買 D 品牌的人，有 10% 的人會購買 A 品牌和 E 品牌，你可以每個品牌表示成這樣：</p>
+<pre class="prettyprint lang-txt" title="">brand  A    B    C    D    E
+A      1.0  0.7  0.4  0.0  0.0
+B      ...
+C      ...
+D      0.1  0.0  0.0  1.0  0.1
+E      ...
+</pre>
+<p>ref:<br />
+<a href="http://phunters.lofter.com/post/86d56_194e956">http://phunters.lofter.com/post/86d56_194e956</a></p>
+<h3 id="gfm-15">LabelCount Encoding</h3>
+<p>類似 Bin-cunting 的做法，一樣是利用現有的 count 或其他統計上的資料，差別在於 LabelCount Encoding 最後用的是次序而不是數值本身。優點是對異常值不敏感。</p>
+<pre class="prettyprint lang-txt" title="">ad_id   ad_clicks  ad_rank
+412533  1355       1
+423334  12         4
+345664  132        3
+349833  1244       2
+</pre>
+<p>ref:<br />
+<a href="https://www.slideshare.net/gabrielspmoreira/feature-engineering-getting-most-out-of-data-for-predictive-models-tdc-2017/47">https://www.slideshare.net/gabrielspmoreira/feature-engineering-getting-most-out-of-data-for-predictive-models-tdc-2017/47</a></p>
+<h3 id="gfm-16">Count Vectorization</h3>
+<p>除了可以用在 text 特徵之外，如果你有 comma-seperated 的 categorical 特徵也可以使用這個方法。例如電影類型 <code>genre</code>，裡頭的值長這樣 <code>Action,Sci-Fi,Drama</code>，就可以先用 <code>RegexTokenizer</code> 轉成 <code>Array("action", "sci-fi", "drama")</code>，再用 <code>CountVectorizer</code> 轉成 vector。</p>
+<p>ref:<br />
+<a href="https://spark.apache.org/docs/latest/ml-features.html#countvectorizer">https://spark.apache.org/docs/latest/ml-features.html#countvectorizer</a></p>
+<h3 id="gfm-17">Feature Hashing</h3>
+<p>以 user id 為例，透過一個 hash function 把每一個 user id 映射到 <code>(hashed1_, hashed_2, ..., hashed_m)</code> 的某個值。指定 m &lt;&lt; user id 的取值範圍，所以缺點是會有 collision（如果你的 model 足夠 robust，倒也是可以不管），優點是可以良好地處理之前沒見過的值和罕見的值。當然不只可以 hash 單一值，也可以 hash 一個 vector。</p>
+<p>你可以把 feature hashing 表示為單一欄位的數值（例如 <code>2</code>）或是類似 one-hot encoding 那樣的多欄位的 binary 表示法（例如 <code>[0, 0, 1]</code>）。</p>
+<pre class="prettyprint lang-py" title="">import hashlib
+
+def hash_func(s, n_bins=100000):
+    s = s.encode('utf-8')
+    return int(hashlib.md5(s).hexdigest(), 16) % (n_bins - 1) + 1
+
+print(hash_func('some categorical value'))
+</pre>
+<p>ref:<br />
+<a href="https://github.com/apache/spark/pull/18513">https://github.com/apache/spark/pull/18513</a><br />
+<a href="https://spark.apache.org/docs/latest/ml-features.html#feature-transformation">https://spark.apache.org/docs/latest/ml-features.html#feature-transformation</a><br />
+<a href="https://www.slideshare.net/gabrielspmoreira/feature-engineering-getting-most-out-of-data-for-predictive-models-tdc-2017/42">https://www.slideshare.net/gabrielspmoreira/feature-engineering-getting-most-out-of-data-for-predictive-models-tdc-2017/42</a></p>
+<h3 id="gfm-18">Mean Encoding</h3>
+<p>ref:<br />
+<a href="https://zhuanlan.zhihu.com/p/26308272">https://zhuanlan.zhihu.com/p/26308272</a></p>
+<h3 id="gfm-19">Category Embedding</h3>
+<p>ref:<br />
+<a href="https://arxiv.org/abs/1604.06737">https://arxiv.org/abs/1604.06737</a><br />
+<a href="https://www.slideshare.net/HJvanVeen/feature-engineering-72376750/17">https://www.slideshare.net/HJvanVeen/feature-engineering-72376750/17</a><br />
+<a href="https://blog.myyellowroad.com/using-categorical-data-in-machine-learning-with-python-from-dummy-variables-to-deep-category-42fd0a43b009">https://blog.myyellowroad.com/using-categorical-data-in-machine-learning-with-python-from-dummy-variables-to-deep-category-42fd0a43b009</a></p>
+<h3 id="gfm-20">User Profile 用戶畫像</h3>
+<p>使用用戶畫像來表示每個 user id，例如用戶的年齡、性別、職業、收入、居住地、偏好的各種 tag 等，把每個 user 表示成一個 feature vector。除了單一維度的特徵之外，也可以建立「用戶聽過的歌都是哪些曲風」、「用戶（30 天內）瀏覽過的文章都是什麼分類，以 TF-IDF 的方式表達。或者是把用戶所有喜歡文章對應的向量的平均值作為此用戶的 profile。比如某個用戶經常關注與推薦系統有關的文章，那麼他的 profile 中 "CB"、"CF" 和 "推薦系統" 對應的權重值就會較高。</p>
+<p>ref:<br />
+<a href="https://mp.weixin.qq.com/s/w87-dyG9Ap9xJ_HZu0Qn-w">https://mp.weixin.qq.com/s/w87-dyG9Ap9xJ_HZu0Qn-w</a><br />
+<a href="https://medium.com/unstructured/how-feature-engineering-can-help-you-do-well-in-a-kaggle-competition-part-i-9cc9a883514d">https://medium.com/unstructured/how-feature-engineering-can-help-you-do-well-in-a-kaggle-competition-part-i-9cc9a883514d</a></p>
+<h4 id="gfm-21">Rare Categorical Variables</h4>
+<p>先計算好每一種 category 的數量，然後把小於某個 threshold 的 category 都改成 "Others" 之類的值。或是使用 clustering 演算法來達到同樣的目的。你也可以直接建立一個新的 binary feature 叫做 rare，要來標示那些相對少見的資料點。</p>
+<h4 id="gfm-22">Unseen Categorical Variables</h4>
+<p>以 Spark ML 為例，當你用 training set 的資料 fit 了一個 <code>StringIndexer</code>（和 <code>OneHotEncoder</code>），把它拿去用在 test set 上時，有一定的機率你會遇到某些 categorical 特徵的值只在 test set 出現，所以對只見過 training set 的 transformer 來說，這些就是所謂的 unseen values。</p>
+<p>對付 unseen values 通常有幾種做法：</p>
+<ul>
+<li>用整個 training set + test set 來編碼 categorical 特徵</li>
+<li>直接捨棄含有 unseen values 的那筆資料</li>
+<li>把 unseen values 改成 "Others" 之類的已知值。<code>StringIndexer</code> 的 <code>.setHandleInvalid("keep")</code> 基本上就是這種做法</li>
+</ul>
+<p>如果採用第一種方式，一但你把這個 transformer 拿到 production 去用時，無可避免地還是會遇到 unseen values。不過通常線上的 feature engineering 會有別的做法，例如事先把 user 或 item 的各項特徵都算好（定期更新或是 data 產生的時候觸發），然後以 id 為 key 存進 Redis 之類的 NoSQL 裡，model 要用的時候直接用 user id / item id 拿到處理好的 feature vector。</p>
+<p>ref:<br />
+<a href="https://stackoverflow.com/questions/34681534/spark-ml-stringindexer-handling-unseen-labels">https://stackoverflow.com/questions/34681534/spark-ml-stringindexer-handling-unseen-labels</a></p>
+<h4 id="gfm-23">Large Categorical Variables</h4>
+<p>針對那種非常大的 categorical 特徵（例如 id 類的特徵），如果你用的是 logistic regression，其實可以硬上 one-hot encoding。不然就是利用上面提到的 feature hashing 或 bin counting 等方式；如果是 GBDT 的話，甚至可以直接用 id 硬上，只要 tree 足夠多。</p>
+<p>ref:<br />
+<a href="https://www.zhihu.com/question/34819617">https://www.zhihu.com/question/34819617</a></p>
+<h2 id="gfm-24">Feature Construction 特徵建構</h2>
+<p>特徵構建指的是從原有的特徵中，人工地創造出新的特徵，通常用來解決一般的線性模型沒辦法學到非線性特徵的問題。其中一個重點可能是能不能夠過某些辦法，在特徵中加入某些「額外的資訊」，雖然也得小心數據偏見的問題。</p>
+<p>如果你有很多 user 購物的資料，除了可以 aggregate 得到 <code>total spend</code> 這樣的 feature 之外，也可以變換一下，變成 <code>spend in last week</code>、<code>spend in last month</code> 和 <code>spend in last year</code> 這種可以表示「趨勢」的特徵。</p>
+<p>範例：</p>
+<ul>
+<li><code>author_avg_page_view</code>: 該文章作者的所有文章的平均瀏覽數</li>
+<li><code>user_visited_days_since_doc_published</code>: 該文章發布到該用戶訪問經過了多少天</li>
+<li><code>user_history_doc_sim_categories</code>: 用戶讀過的所有文章的分類和該篇文章的分類的 TF-IDF 的相似度</li>
+<li><code>user_history_doc_sim_topics</code>: 用戶讀過的所有文章的內文和該篇文章的內文的 TF-IDF 的相似度</li>
+</ul>
+<p>ref:<br />
+<a href="https://medium.com/unstructured/how-feature-engineering-can-help-you-do-well-in-a-kaggle-competition-part-i-9cc9a883514d">https://medium.com/unstructured/how-feature-engineering-can-help-you-do-well-in-a-kaggle-competition-part-i-9cc9a883514d</a><br />
+<a href="https://www.safaribooksonline.com/library/view/large-scale-machine/9781785888748/ch04s02.html">https://www.safaribooksonline.com/library/view/large-scale-machine/9781785888748/ch04s02.html</a><br />
+<a href="https://www.slideshare.net/HJvanVeen/feature-engineering-72376750/23">https://www.slideshare.net/HJvanVeen/feature-engineering-72376750/23</a></p>
+<h3 id="gfm-25">Temporal Features 時間特徵</h3>
+<p>對於 date / time 類型的資料，除了轉換成 timestamp 和取出 day、month 和 year 做成新的欄位之外，也可以對 hour 做 binning（分成上午、中午、晚上之類的）或是對 day 做 binning（分成工作日、週末）；或是想辦法查出該日期當天的天氣、節日或活動等訊息，例如 <code>is_national_holiday</code> 或 <code>has_sport_events</code>。</p>
+<p>更進一步，用 datetime 類的資料通常也可以做成 <code>spend_hours_last_week</code> 或 <code>spend_money_last_week</code> 這種可以用來表示「趨勢」的特徵。</p>
+<h3 id="gfm-26">Text Features 文字特徵</h3>
+<p>ref:<br />
+<a href="https://www.slideshare.net/HJvanVeen/feature-engineering-72376750/57">https://www.slideshare.net/HJvanVeen/feature-engineering-72376750/57</a></p>
+<h3 id="gfm-27">Spatial Features 地理特徵</h3>
+<p>如果你有 <code>city</code> 或 <code>address</code> 等特徵，可以新建出 <code>latitude</code> 和 <code>longitude</code> 兩個 features（當然你得透過外部的 API 或資料來源才做得到），再組合出 <code>median_income_within_2_miles</code> 這樣的特徵。</p>
+<p>ref:<br />
+<a href="https://www.slideshare.net/HJvanVeen/feature-engineering-72376750/47">https://www.slideshare.net/HJvanVeen/feature-engineering-72376750/47</a></p>
+<h3 id="gfm-28">Cyclical Features</h3>
+<p>ref:<br />
+<a href="http://blog.davidkaleko.com/feature-engineering-cyclical-features.html">http://blog.davidkaleko.com/feature-engineering-cyclical-features.html</a></p>
+<h2 id="gfm-29">Features Interaction 特徵交互</h2>
+<p>假設你有 <code>A</code> 和 <code>B</code> 兩個 continuous 特徵，你可以用 <code>A + B</code>、<code>A - B</code>、<code>A * B</code> 或 <code>A / B</code> 之類的方式建立新的特徵。例如 <code>house_age_at_purchase = house_built_date - house_purchase_date</code> 或是 <code>click_through_rate = n_clicks / n_impressions</code>。</p>
+<p>還有一種類似的作法叫 Polynomial Expansion 多項式展開，當 degree 為 2 時，可以把 <code>(x, y)</code> 兩個特徵變成 <code>(x, x * x, y, x * y, y * y)</code> 五個特徵。</p>
+<p>ref:<br />
+<a href="https://spark.apache.org/docs/latest/ml-features.html#polynomialexpansion">https://spark.apache.org/docs/latest/ml-features.html#polynomialexpansion</a><br />
+<a href="https://elitedatascience.com/feature-engineering-best-practices">https://elitedatascience.com/feature-engineering-best-practices</a></p>
+<h2 id="gfm-30">Feature Combination 特徵組合</h2>
+<p>也稱為特徵交叉。</p>
+<p>特徵組合主要是針對 categorical 特徵，特徵交互則是適用於 continuous 特徵。但是兩者的概念是差不多的，就是把兩個以上的特徵透過某種方式結合在一起，變成新的特徵。通常用來解決一般的線性模型沒辦法學到非線性特徵的問題。</p>
+<p>假設有 <code>gender</code> 和 <code>wealth</code> 兩個特徵，分別有 2 和 3 種取值，最簡單的方式就是直接 string concatenation 組合出一個新的特徵 <code>gender_wealth</code>，共有 2 x 3 = 6 種取值。因為是 categorical 特徵，可以直接對 <code>gender_wealth</code> 使用 <code>StringIndexer</code> 和 <code>OneHotEncoder</code>。你當然也可以一起組合 continuous 和 categorical 特徵，例如 <code>age_wealth</code> 這樣的特徵，只是 vector 裡的值就不是 0 1 而是 <code>age</code> 本身了。</p>
+<p>假設 C 是 categorical 特徵，N 是 continuous 特徵，以下有幾種有意義的組合：</p>
+<ul>
+<li><code>median(N) GROUP BY C</code> 中位數</li>
+<li><code>mean(N) GROUP BY C</code> 算術平均數</li>
+<li><code>mode(N) GROUP BY C</code> 眾數</li>
+<li><code>min(N) GROUP BY C</code> 最小值</li>
+<li><code>max(N) GROUP BY C</code> 最大值</li>
+<li><code>std(N) GROUP BY C</code> 標準差</li>
+<li><code>var(N) GROUP BY C</code> 方差</li>
+<li><code>N - median(N) GROUP BY C</code></li>
+</ul>
+<pre class="prettyprint lang-txt" title="">user_id  age  gender  wealth  gender_wealth  gender_wealth_ohe   age_wealth
+1        56   male    rich    male_rich      [1, 0, 0, 0, 0, 0]  [56, 0, 0]
+2        30   male    middle  male_middle    [0, 1, 0, 0, 0, 0]  [0, 30, 0]
+3        19   female  rich    female_rich    [0, 0, 0, 1, 0, 0]  [19, 0, 0]
+4        62   female  poor    female_poor    [0, 0, 0, 0, 0, 1]  [0, 0, 62]
+5        78   male    poor    male_poor      [0, 0, 1, 0, 0, 0]  [0, 0, 78]
+6        34   female  middle  female_middle  [0, 0, 0, 0, 1, 0]  [0, 34, 0]
+</pre>
+<p>ref:<br />
+<a href="https://breezedeus.github.io/2014/11/15/breezedeus-feature-processing.html">http://breezedeus.github.io/2014/11/15/breezedeus-feature-processing.html</a><br />
+<a href="http://phunters.lofter.com/post/86d56_194e956">http://phunters.lofter.com/post/86d56_194e956</a><br />
+<a href="https://zhuanlan.zhihu.com/p/26444240">https://zhuanlan.zhihu.com/p/26444240</a><br />
+<a href="http://blog.csdn.net/mytestmy/article/details/40933235">http://blog.csdn.net/mytestmy/article/details/40933235</a></p>
+<h2 id="gfm-31">Feature Extraction 特徵提取</h2>
+<p>通常就是指 dimensionality reduction。</p>
+<ul>
+<li>Principal Component Analysis (PCA)</li>
+<li>Latent Dirichlet Allocation (LDA)</li>
+<li>Latent Semantic Analysis (LSA)</li>
+</ul>
+<h2 id="gfm-32">Feature Selection 特徵選擇</h2>
+<p>特徵選擇是指透過某些方法自動地從所有的特徵中挑選出有用的特徵。</p>
+<p>ref:<br />
+<a href="http://scikit-learn.org/stable/modules/feature_selection.html">http://scikit-learn.org/stable/modules/feature_selection.html</a></p>
+<h3 id="gfm-33">Filter Method</h3>
+<p>採用某一種評估指標（發散性、相關性或 Information Gain 等），單獨地衡量個別特徵跟 target variable 之間的關係，常用的方法有 Chi Square Test（卡方檢驗）。這種特徵選擇方式沒有任何模型的參與。</p>
+<p>以相關性來說，也不見得跟 target variable 的相關性越高就越好，</p>
+<p>ref:<br />
+<a href="https://spark.apache.org/docs/latest/ml-features.html#chisqselector">https://spark.apache.org/docs/latest/ml-features.html#chisqselector</a><br />
+<a href="http://files.cnblogs.com/files/XBWer/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%81%AE%E7%89%B9%E5%BE%81.pdf">http://files.cnblogs.com/files/XBWer/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%81%AE%E7%89%B9%E5%BE%81.pdf</a></p>
+<h3 id="gfm-34">Wrapper Method</h3>
+<p>會採用某個模型來預測你的 target variable，把特徵選擇想成是一個組合優化的問題，想辦法找出一組特徵子集能夠讓模型的評估結果最好。缺點是太耗時間了，實務上不常用。</p>
+<p>ref:<br />
+<a href="https://www.cnblogs.com/heaad/archive/2011/01/02/1924088.html">http://www.cnblogs.com/heaad/archive/2011/01/02/1924088.html</a></p>
+<h3 id="gfm-35">Embedded Method</h3>
+<p>通常會採用一個會為特徵賦予 coefficients 或 importances 的演算法，例如 Logistic Regression（特別是使用 L1 penalty）或 GBDT，直接用權重或重要性對所有特徵排序，然後取前 n 個作為特徵子集。</p>
+<p>ref:<br />
+<a href="http://scikit-learn.org/stable/modules/feature_selection.html#feature-selection-using-selectfrommodel">http://scikit-learn.org/stable/modules/feature_selection.html#feature-selection-using-selectfrommodel</a><br />
+<a href="https://www.zhihu.com/question/28641663">https://www.zhihu.com/question/28641663</a></p>
+<h2 id="gfm-36">Feature Learning 特徵學習</h2>
+<p>也稱為 Representation Learning 或 Automated Feature Engineering。</p>
+<ul>
+<li>GBDT</li>
+<li>Neural Network: Restricted Boltzmann Machines</li>
+<li>Deep Learning: Autoencoder</li>
+</ul>
+<p>ref:<br />
+<a href="https://zhuanlan.zhihu.com/p/26444240">https://zhuanlan.zhihu.com/p/26444240</a></p>
+<h2 id="gfm-37">Data Leakage 數據洩漏</h2>
+<p>就是指你在 features 中直接或間接地加入了跟 target variable 有關的數據。</p>
+<p>ref:<br />
+<a href="https://zhuanlan.zhihu.com/p/26444240">https://zhuanlan.zhihu.com/p/26444240</a></p>
+<h2 id="gfm-38">Target Engineering</h2>
+<p>雖然不能算是 feature engineering 的一部分，但是其實你也可以對 target variable / label（就是你的模型要預測的那個值）做點變換。例如 <code>log(y + 1)</code> 或 <code>exp(y) - 1</code>。</p>
+</div>
+<div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-official sd-sharing"><h3 class="sd-title">Share</h3><div class="sd-content"><ul><li class="share-facebook"><div class="fb-share-button" data-href="https://vinta.ws/code/feature-engineering.html" data-layout="button_count"></div></li><li class="share-twitter"><a href="https://twitter.com/share" class="twitter-share-button" data-url="https://vinta.ws/code/feature-engineering.html" data-text="Feature Engineering 特徵工程中常見的方法" data-via="vinta">Tweet</a></li><li class="share-end"></li></ul></div></div></div>
+<div id='jp-relatedposts' class='jp-relatedposts'>
+<h3 class="jp-relatedposts-headline"><em>Related</em></h3>
+</div> </div>
+<footer class="entry-footer">
+<div class="tag-links">Tagged: <a href="https://vinta.ws/code/tag/feature-engineering" rel="tag">feature engineering</a><a href="https://vinta.ws/code/tag/machine-learning" rel="tag">machine learning</a></div> </footer>
+</article>
+<nav class="navigation post-navigation" role="navigation">
+<h2 class="screen-reader-text">Post navigation</h2>
+<div class="nav-links"><div class="nav-previous"><a href="https://vinta.ws/code/vinta-on-codetengu-weekly-issue-99-apache-spark-python-machine-learning-feature-engineering-testing-linux.html" rel="prev">&larr; 碼天狗週刊 第 99 期 @vinta - Apache Spark, Python, Machine Learning, Feature Engineering, Testing, Linux</a></div><div class="nav-next"><a href="https://vinta.ws/code/setup-spark-scala-and-maven-with-intellij-idea.html" rel="next">Setup Spark, Scala and Maven with Intellij IDEA &rarr;</a></div></div>
+</nav> </main>
+</div>
+<div class="cute_profiles_style">
+<a title="Facebook" class="cute_profiles_0 cute_profiles_i" href="https://www.facebook.com/vinta.chen" target="_blank"></a>
+<a title="Twitter" class="cute_profiles_1 cute_profiles_i" href="https://twitter.com/vinta" target="_blank"></a>
+<a title="Linkedin" class="cute_profiles_7 cute_profiles_i" href="https://www.linkedin.com/in/vinta" target="_blank"></a>
+<a title="GitHub" class="cute_profiles_27 cute_profiles_i" href="https://github.com/vinta" target="_blank"></a>
+<a title="CodeTengu" class="cute_profiles_29 cute_profiles_i" href="https://weekly.codetengu.com/" target="_blank"></a>
+</div>
+<aside class="social-links">
+<div class="inner">
+<h3 class="social-title">Say Hello</h3><a href="https://twitter.com/vinta" class="socnet-link" title="Twitter"><i aria-hidden="true" class="icon-twitter"></i><span class="screen-reader-text">Twitter</span></a><a href="https://www.facebook.com/vinta.chen" class="socnet-link" title="Facebook"><i aria-hidden="true" class="icon-facebook"></i><span class="screen-reader-text">Facebook</span></a><a href="https://www.linkedin.com/in/vinta" class="socnet-link" title="LinkedIn"><i aria-hidden="true" class="icon-linkedin"></i><span class="screen-reader-text">LinkedIn</span></a><a href="https://github.com/vinta" class="socnet-link" title="GitHub"><i aria-hidden="true" class="icon-github"></i><span class="screen-reader-text">GitHub</span></a><a href="https://vinta.ws/code/feed" class="socnet-link" title="RSS"><i aria-hidden="true" class="icon-rss"></i><span class="screen-reader-text">RSS</span></a> </div>
+</aside>
+<footer class="site-footer">
+<div class="inner">
+<div class="supplementary">
+<div class="grid">
+<div class="one-fourth">
+<section id="tag_cloud-2" class="widget widget_tag_cloud"><h2 class="widget-title">Tags</h2><div class="tagcloud"><a href="https://vinta.ws/code/tag/amazon-web-services" class="tag-cloud-link tag-link-16 tag-link-position-1" style="font-size: 14px;">amazon web services</a>
+<a href="https://vinta.ws/code/tag/apache-spark" class="tag-cloud-link tag-link-108 tag-link-position-2" style="font-size: 14px;">apache spark</a>
+<a href="https://vinta.ws/code/tag/api" class="tag-cloud-link tag-link-47 tag-link-position-3" style="font-size: 14px;">api</a>
+<a href="https://vinta.ws/code/tag/aws-dynamodb" class="tag-cloud-link tag-link-107 tag-link-position-4" style="font-size: 14px;">aws dynamodb</a>
+<a href="https://vinta.ws/code/tag/aws-lambda" class="tag-cloud-link tag-link-124 tag-link-position-5" style="font-size: 14px;">aws lambda</a>
+<a href="https://vinta.ws/code/tag/aws-s3" class="tag-cloud-link tag-link-17 tag-link-position-6" style="font-size: 14px;">aws s3</a>
+<a href="https://vinta.ws/code/tag/blockchain" class="tag-cloud-link tag-link-126 tag-link-position-7" style="font-size: 14px;">blockchain</a>
+<a href="https://vinta.ws/code/tag/cache" class="tag-cloud-link tag-link-56 tag-link-position-8" style="font-size: 14px;">cache</a>
+<a href="https://vinta.ws/code/tag/celery" class="tag-cloud-link tag-link-37 tag-link-position-9" style="font-size: 14px;">celery</a>
+<a href="https://vinta.ws/code/tag/cli" class="tag-cloud-link tag-link-101 tag-link-position-10" style="font-size: 14px;">cli</a>
+<a href="https://vinta.ws/code/tag/codetengu" class="tag-cloud-link tag-link-100 tag-link-position-11" style="font-size: 14px;">codetengu</a>
+<a href="https://vinta.ws/code/tag/concurrency" class="tag-cloud-link tag-link-69 tag-link-position-12" style="font-size: 14px;">concurrency</a>
+<a href="https://vinta.ws/code/tag/database-migrations" class="tag-cloud-link tag-link-59 tag-link-position-13" style="font-size: 14px;">database migrations</a>
+<a href="https://vinta.ws/code/tag/datetime" class="tag-cloud-link tag-link-50 tag-link-position-14" style="font-size: 14px;">datetime</a>
+<a href="https://vinta.ws/code/tag/debug" class="tag-cloud-link tag-link-29 tag-link-position-15" style="font-size: 14px;">debug</a>
+<a href="https://vinta.ws/code/tag/deployment" class="tag-cloud-link tag-link-34 tag-link-position-16" style="font-size: 14px;">deployment</a>
+<a href="https://vinta.ws/code/tag/django" class="tag-cloud-link tag-link-13 tag-link-position-17" style="font-size: 14px;">django</a>
+<a href="https://vinta.ws/code/tag/django-models" class="tag-cloud-link tag-link-95 tag-link-position-18" style="font-size: 14px;">django models</a>
+<a href="https://vinta.ws/code/tag/django-templates" class="tag-cloud-link tag-link-78 tag-link-position-19" style="font-size: 14px;">django templates</a>
+<a href="https://vinta.ws/code/tag/django-views" class="tag-cloud-link tag-link-96 tag-link-position-20" style="font-size: 14px;">django views</a>
+<a href="https://vinta.ws/code/tag/docker" class="tag-cloud-link tag-link-36 tag-link-position-21" style="font-size: 14px;">docker</a>
+<a href="https://vinta.ws/code/tag/editor" class="tag-cloud-link tag-link-117 tag-link-position-22" style="font-size: 14px;">editor</a>
+<a href="https://vinta.ws/code/tag/elasticsearch" class="tag-cloud-link tag-link-70 tag-link-position-23" style="font-size: 14px;">elasticsearch</a>
+<a href="https://vinta.ws/code/tag/env" class="tag-cloud-link tag-link-51 tag-link-position-24" style="font-size: 14px;">env</a>
+<a href="https://vinta.ws/code/tag/feature-engineering" class="tag-cloud-link tag-link-111 tag-link-position-25" style="font-size: 14px;">feature engineering</a>
+<a href="https://vinta.ws/code/tag/flask" class="tag-cloud-link tag-link-121 tag-link-position-26" style="font-size: 14px;">flask</a>
+<a href="https://vinta.ws/code/tag/functional-programming" class="tag-cloud-link tag-link-110 tag-link-position-27" style="font-size: 14px;">functional programming</a>
+<a href="https://vinta.ws/code/tag/git" class="tag-cloud-link tag-link-32 tag-link-position-28" style="font-size: 14px;">git</a>
+<a href="https://vinta.ws/code/tag/github" class="tag-cloud-link tag-link-10 tag-link-position-29" style="font-size: 14px;">github</a>
+<a href="https://vinta.ws/code/tag/go" class="tag-cloud-link tag-link-66 tag-link-position-30" style="font-size: 14px;">go</a>
+<a href="https://vinta.ws/code/tag/google-bigquery" class="tag-cloud-link tag-link-115 tag-link-position-31" style="font-size: 14px;">google bigquery</a>
+<a href="https://vinta.ws/code/tag/google-cloud-platform" class="tag-cloud-link tag-link-114 tag-link-position-32" style="font-size: 14px;">google cloud platform</a>
+<a href="https://vinta.ws/code/tag/haproxy" class="tag-cloud-link tag-link-122 tag-link-position-33" style="font-size: 14px;">haproxy</a>
+<a href="https://vinta.ws/code/tag/i18n" class="tag-cloud-link tag-link-76 tag-link-position-34" style="font-size: 14px;">i18n</a>
+<a href="https://vinta.ws/code/tag/intellij-idea" class="tag-cloud-link tag-link-113 tag-link-position-35" style="font-size: 14px;">intellij idea</a>
+<a href="https://vinta.ws/code/tag/io" class="tag-cloud-link tag-link-49 tag-link-position-36" style="font-size: 14px;">io</a>
+<a href="https://vinta.ws/code/tag/java" class="tag-cloud-link tag-link-41 tag-link-position-37" style="font-size: 14px;">java</a>
+<a href="https://vinta.ws/code/tag/javascript" class="tag-cloud-link tag-link-11 tag-link-position-38" style="font-size: 14px;">javascript</a>
+<a href="https://vinta.ws/code/tag/kubernetes" class="tag-cloud-link tag-link-123 tag-link-position-39" style="font-size: 14px;">kubernetes</a>
+<a href="https://vinta.ws/code/tag/linux" class="tag-cloud-link tag-link-74 tag-link-position-40" style="font-size: 14px;">linux</a>
+<a href="https://vinta.ws/code/tag/machine-learning" class="tag-cloud-link tag-link-98 tag-link-position-41" style="font-size: 14px;">machine learning</a>
+<a href="https://vinta.ws/code/tag/maven" class="tag-cloud-link tag-link-42 tag-link-position-42" style="font-size: 14px;">maven</a>
+<a href="https://vinta.ws/code/tag/mongodb" class="tag-cloud-link tag-link-119 tag-link-position-43" style="font-size: 14px;">mongodb</a>
+<a href="https://vinta.ws/code/tag/monitoring" class="tag-cloud-link tag-link-125 tag-link-position-44" style="font-size: 14px;">monitoring</a>
+<a href="https://vinta.ws/code/tag/mysql" class="tag-cloud-link tag-link-23 tag-link-position-45" style="font-size: 14px;">mysql</a>
+<a href="https://vinta.ws/code/tag/mysql-tuning" class="tag-cloud-link tag-link-61 tag-link-position-46" style="font-size: 14px;">mysql tuning</a>
+<a href="https://vinta.ws/code/tag/nginx" class="tag-cloud-link tag-link-18 tag-link-position-47" style="font-size: 14px;">nginx</a>
+<a href="https://vinta.ws/code/tag/node-js" class="tag-cloud-link tag-link-12 tag-link-position-48" style="font-size: 14px;">node.js</a>
+<a href="https://vinta.ws/code/tag/profiling" class="tag-cloud-link tag-link-81 tag-link-position-49" style="font-size: 14px;">profiling</a>
+<a href="https://vinta.ws/code/tag/python" class="tag-cloud-link tag-link-2 tag-link-position-50" style="font-size: 14px;">python</a>
+<a href="https://vinta.ws/code/tag/recommender-system" class="tag-cloud-link tag-link-104 tag-link-position-51" style="font-size: 14px;">recommender system</a>
+<a href="https://vinta.ws/code/tag/redis" class="tag-cloud-link tag-link-31 tag-link-position-52" style="font-size: 14px;">redis</a>
+<a href="https://vinta.ws/code/tag/scala" class="tag-cloud-link tag-link-109 tag-link-position-53" style="font-size: 14px;">scala</a>
+<a href="https://vinta.ws/code/tag/scrapy" class="tag-cloud-link tag-link-53 tag-link-position-54" style="font-size: 14px;">scrapy</a>
+<a href="https://vinta.ws/code/tag/search" class="tag-cloud-link tag-link-71 tag-link-position-55" style="font-size: 14px;">search</a>
+<a href="https://vinta.ws/code/tag/sublime-text" class="tag-cloud-link tag-link-15 tag-link-position-56" style="font-size: 14px;">sublime text</a>
+<a href="https://vinta.ws/code/tag/testing" class="tag-cloud-link tag-link-45 tag-link-position-57" style="font-size: 14px;">testing</a>
+<a href="https://vinta.ws/code/tag/transaction" class="tag-cloud-link tag-link-92 tag-link-position-58" style="font-size: 14px;">transaction</a>
+<a href="https://vinta.ws/code/tag/ubuntu" class="tag-cloud-link tag-link-62 tag-link-position-59" style="font-size: 14px;">ubuntu</a>
+<a href="https://vinta.ws/code/tag/visual-studio-code" class="tag-cloud-link tag-link-120 tag-link-position-60" style="font-size: 14px;">visual studio code</a>
+<a href="https://vinta.ws/code/tag/web-crawler" class="tag-cloud-link tag-link-54 tag-link-position-61" style="font-size: 14px;">web crawler</a></div>
+</section> </div>
+<div class="one-fourth">
+<section id="recent-posts-2" class="widget widget_recent_entries"> <h2 class="widget-title">Recent Posts</h2> <ul>
+<li>
+<a href="https://vinta.ws/code/write-next-generation-javascript-with-babel-7.html">Write next generation JavaScript with Babel 7</a>
+</li>
+<li>
+<a href="https://vinta.ws/code/mongodb-change-stream-react-to-real-time-data-changes.html">MongoDB Change Stream: react to real-time data changes</a>
+</li>
+<li>
+<a href="https://vinta.ws/code/mitmproxy-proxy-any-application-network-traffic-through-your-local-machine.html">mitmproxy: proxy any network traffic through your local machine</a>
+</li>
+<li>
+<a href="https://vinta.ws/code/vinta-on-codetengu-weekly-issue-140-mongodb-kubernetes-nginx-google-cloud-platform-mysql.html">碼天狗週刊 第 140 期 @vinta - MongoDB, Kubernetes, NGINX, Google Cloud Platform, MySQL</a>
+</li>
+<li>
+<a href="https://vinta.ws/code/vinta-on-codetengu-weekly-issue-135-kubernetes-python-mongodb.html">碼天狗週刊 第 135 期 @vinta - Kubernetes, Python, MongoDB</a>
+</li>
+<li>
+<a href="https://vinta.ws/code/integrate-with-google-cloud-api-in-python.html">Integrate with Google Cloud API in Python</a>
+</li>
+<li>
+<a href="https://vinta.ws/code/mongodb-operations-replica-set.html">MongoDB operations: Replica Set</a>
+</li>
+<li>
+<a href="https://vinta.ws/code/the-complete-guide-to-google-kubernetes-engine-gke.html">The incomplete guide to Google Kubernetes Engine</a>
+</li>
+<li>
+<a href="https://vinta.ws/code/setup-celery-with-your-flask-project.html">Setup Celery with your Flask project</a>
+</li>
+<li>
+<a href="https://vinta.ws/code/flask-project-structures.html">Flask project structures</a>
+</li>
+<li>
+<a href="https://vinta.ws/code/vinta-on-codetengu-weekly-issue-130-programming-code-review-scrum-mongodb-nosql-ipfs.html">碼天狗週刊 第 130 期 @vinta - Programming, Code Review, Scrum, MongoDB, NoSQL, IPFS</a>
+</li>
+<li>
+<a href="https://vinta.ws/code/vinta-on-codetengu-weekly-issue-125-amazon-web-services-google-cloud-platform-kubernetes-devops-mysql-redis.html">碼天狗週刊 第 125 期 @vinta - Amazon Web Services, Google Cloud Platform, Kubernetes, DevOps, MySQL, Redis</a>
+</li>
+<li>
+<a href="https://vinta.ws/code/ipfs-the-very-slow-distributed-permanent-web.html">IPFS: The (Very Slow) Distributed Permanent Web</a>
+</li>
+<li>
+<a href="https://vinta.ws/code/deploy-tick-stack-on-kubernetes-telegraf-influxdb-chronograf-and-kapacitor.html">Deploy TICK stack on Kubernetes: Telegraf, InfluxDB, Chronograf, and Kapacitor</a>
+</li>
+<li>
+<a href="https://vinta.ws/code/pipenv-and-pipfile-the-officially-recommended-python-packaging-tool.html">Pipenv and Pipfile: The officially recommended Python packaging tool</a>
+</li>
+</ul>
+</section> </div>
+<div class="one-fourth">
+<section id="archives-2" class="widget widget_archive"><h2 class="widget-title">Archives</h2> <ul>
+<li><a href='https://vinta.ws/code/2019/02'>February 2019</a>&nbsp;(1)</li>
+<li><a href='https://vinta.ws/code/2019/01'>January 2019</a>&nbsp;(1)</li>
+<li><a href='https://vinta.ws/code/2018/10'>October 2018</a>&nbsp;(1)</li>
+<li><a href='https://vinta.ws/code/2018/09'>September 2018</a>&nbsp;(1)</li>
+<li><a href='https://vinta.ws/code/2018/08'>August 2018</a>&nbsp;(1)</li>
+<li><a href='https://vinta.ws/code/2018/07'>July 2018</a>&nbsp;(3)</li>
+<li><a href='https://vinta.ws/code/2018/06'>June 2018</a>&nbsp;(3)</li>
+<li><a href='https://vinta.ws/code/2018/05'>May 2018</a>&nbsp;(2)</li>
+<li><a href='https://vinta.ws/code/2018/04'>April 2018</a>&nbsp;(7)</li>
+<li><a href='https://vinta.ws/code/2018/03'>March 2018</a>&nbsp;(4)</li>
+<li><a href='https://vinta.ws/code/2018/02'>February 2018</a>&nbsp;(7)</li>
+<li><a href='https://vinta.ws/code/2017/11'>November 2017</a>&nbsp;(1)</li>
+<li><a href='https://vinta.ws/code/2017/10'>October 2017</a>&nbsp;(3)</li>
+<li><a href='https://vinta.ws/code/2017/09'>September 2017</a>&nbsp;(4)</li>
+<li><a href='https://vinta.ws/code/2017/08'>August 2017</a>&nbsp;(6)</li>
+<li><a href='https://vinta.ws/code/2017/05'>May 2017</a>&nbsp;(6)</li>
+<li><a href='https://vinta.ws/code/2017/04'>April 2017</a>&nbsp;(2)</li>
+<li><a href='https://vinta.ws/code/2017/03'>March 2017</a>&nbsp;(2)</li>
+<li><a href='https://vinta.ws/code/2017/02'>February 2017</a>&nbsp;(2)</li>
+<li><a href='https://vinta.ws/code/2017/01'>January 2017</a>&nbsp;(9)</li>
+<li><a href='https://vinta.ws/code/2016/12'>December 2016</a>&nbsp;(1)</li>
+<li><a href='https://vinta.ws/code/2016/11'>November 2016</a>&nbsp;(3)</li>
+<li><a href='https://vinta.ws/code/2016/10'>October 2016</a>&nbsp;(4)</li>
+<li><a href='https://vinta.ws/code/2016/09'>September 2016</a>&nbsp;(2)</li>
+<li><a href='https://vinta.ws/code/2016/07'>July 2016</a>&nbsp;(2)</li>
+<li><a href='https://vinta.ws/code/2016/06'>June 2016</a>&nbsp;(4)</li>
+<li><a href='https://vinta.ws/code/2016/05'>May 2016</a>&nbsp;(2)</li>
+<li><a href='https://vinta.ws/code/2016/01'>January 2016</a>&nbsp;(2)</li>
+<li><a href='https://vinta.ws/code/2015/12'>December 2015</a>&nbsp;(1)</li>
+<li><a href='https://vinta.ws/code/2015/10'>October 2015</a>&nbsp;(2)</li>
+<li><a href='https://vinta.ws/code/2015/09'>September 2015</a>&nbsp;(4)</li>
+<li><a href='https://vinta.ws/code/2015/08'>August 2015</a>&nbsp;(2)</li>
+<li><a href='https://vinta.ws/code/2015/07'>July 2015</a>&nbsp;(3)</li>
+<li><a href='https://vinta.ws/code/2015/06'>June 2015</a>&nbsp;(11)</li>
+<li><a href='https://vinta.ws/code/2015/05'>May 2015</a>&nbsp;(9)</li>
+<li><a href='https://vinta.ws/code/2015/04'>April 2015</a>&nbsp;(8)</li>
+<li><a href='https://vinta.ws/code/2015/03'>March 2015</a>&nbsp;(3)</li>
+<li><a href='https://vinta.ws/code/2015/02'>February 2015</a>&nbsp;(3)</li>
+<li><a href='https://vinta.ws/code/2015/01'>January 2015</a>&nbsp;(6)</li>
+<li><a href='https://vinta.ws/code/2014/12'>December 2014</a>&nbsp;(5)</li>
+<li><a href='https://vinta.ws/code/2014/11'>November 2014</a>&nbsp;(4)</li>
+<li><a href='https://vinta.ws/code/2014/10'>October 2014</a>&nbsp;(4)</li>
+<li><a href='https://vinta.ws/code/2014/08'>August 2014</a>&nbsp;(1)</li>
+<li><a href='https://vinta.ws/code/2014/07'>July 2014</a>&nbsp;(4)</li>
+<li><a href='https://vinta.ws/code/2014/06'>June 2014</a>&nbsp;(1)</li>
+<li><a href='https://vinta.ws/code/2014/05'>May 2014</a>&nbsp;(1)</li>
+<li><a href='https://vinta.ws/code/2014/03'>March 2014</a>&nbsp;(4)</li>
+<li><a href='https://vinta.ws/code/2014/02'>February 2014</a>&nbsp;(10)</li>
+</ul>
+</section> </div>
+<div class="one-fourth">
+<section id="categories-3" class="widget widget_categories"><h2 class="widget-title">Categories</h2> <ul>
+<li class="cat-item cat-item-112"><a href="https://vinta.ws/code/category/about-big-data">Big Data</a> (14)
+</li>
+<li class="cat-item cat-item-118"><a href="https://vinta.ws/code/category/about-codetengu-weekly">CodeTengu Weekly</a> (9)
+</li>
+<li class="cat-item cat-item-22"><a href="https://vinta.ws/code/category/about-database">Database</a> (28)
+</li>
+<li class="cat-item cat-item-38"><a href="https://vinta.ws/code/category/about-devops">DevOps</a> (52)
+</li>
+<li class="cat-item cat-item-7"><a href="https://vinta.ws/code/category/about-javascript">JavaScript</a> (12)
+</li>
+<li class="cat-item cat-item-97"><a href="https://vinta.ws/code/category/about-machine-learning">Machine Learning</a> (21)
+</li>
+<li class="cat-item cat-item-39"><a href="https://vinta.ws/code/category/about-misc">Misc</a> (16)
+</li>
+<li class="cat-item cat-item-4"><a href="https://vinta.ws/code/category/about-python">Python</a> (75)
+</li>
+<li class="cat-item cat-item-116"><a href="https://vinta.ws/code/category/about-web-development">Web Development</a> (60)
+</li>
+</ul>
+</section><section id="search-2" class="widget widget_search"><h2 class="widget-title">Search</h2><form role="search" method="get" class="search-form" action="https://vinta.ws/code/">
+<label>
+<span class="screen-reader-text">Search for:</span>
+<input type="search" class="search-field" placeholder="Search &hellip;" value="" name="s" />
+</label>
+<input type="submit" class="search-submit" value="Search" />
+</form></section> </div>
+</div>
+</div> <div class="site-info">
+<p class="copyright">
+&copy; 2019 I failed the Turing Test. Stork Theme by <a href="http://justgoodthemes.com/">JustGoodThemes</a>. </p>
+<a href="#" id="back-to-top" title="Back To Top"><i aria-hidden="true" class="icon-chevron-up"></i></a>
+</div>
+</div>
+</footer>
+</div>
+<div id="fb-root"></div>
+<script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&appId=249643311490&version=v2.3'; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
+<script>
+			jQuery( document.body ).on( 'post-load', function() {
+				if ( 'undefined' !== typeof FB ) {
+					FB.XFBML.parse();
+				}
+			} );
+			</script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+<link rel='stylesheet' id='hljstheme-css' href='https://vinta.ws/code/wp-content/plugins/wp-code-highlightjs/styles/vs2015.css?ver=0.6.2' type='text/css' media='all' />
+<script type='text/javascript' src='https://s0.wp.com/wp-content/js/devicepx-jetpack.js?ver=201919'></script>
+<script type='text/javascript' src='https://vinta.ws/code/wp-content/themes/stork/js/custom.js?ver=1.6.0'></script>
+<script type='text/javascript' src='https://vinta.ws/code/wp-includes/js/wp-embed.min.js?ver=5.1.1'></script>
+<script type='text/javascript' src='https://vinta.ws/code/wp-content/plugins/wp-code-highlightjs/highlight.common.pack.js?ver=0.6.2'></script>
+<script type='text/javascript' src='https://vinta.ws/code/wp-content/plugins/wp-code-highlightjs/highlight.custom.pack.js?ver=0.6.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var sharing_js_options = {"lang":"en","counts":"1","is_stats_active":"1"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://vinta.ws/code/wp-content/plugins/jetpack/_inc/build/sharedaddy/sharing.min.js?ver=7.2.1'></script>
+<script type='text/javascript'>
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-facebook', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+				return false;
+			});
+</script>
+<style>code.hljs { /*margin: 5px;*/ }</style>
+<script type="text/javascript">
+    (function($, window) {
+        var init_fn_flag = false;
+        var init_fn = (function() {
+            if (init_fn_flag)
+                return;
+            init_fn_flag = true;
+             hljs.configure({"tabReplace":"    "});
+            $('pre code').each(function(i, block) {
+                hljs.highlightBlock(block);
+            });
+        $('pre.prettyprint:not(.prettyprinted), code.prettyprint:not(.prettyprinted), xmp.prettyprint:not(.prettyprinted)').each(function(i, block){
+            var jblock = $(block).removeClass("prettyprint");
+            if (jblock.prop("tagName").toLowerCase() == "code" && jblock.parent().prop("tagName").toLowerCase() == "pre") {
+                hljs.highlightBlock(jblock.parent().get(0));
+                return;
+            }
+
+            var class_desc = $(block).attr("class") || "";
+            var reg_mat = class_desc.match(/lang[^-]*-([\w\d]+)/i);
+            var code_content = $("<code class='hljs'></code>");
+            if (reg_mat && reg_mat.length >= 2) {
+                code_content.addClass(reg_mat[1]);
+            }
+            if (jblock.prop("tagName") === "PRE") {
+              jblock.wrapInner(code_content);
+              hljs.highlightBlock(jblock.children().get(0));
+            } else {
+              var code_content = jblock.html();
+              jblock.replaceWith($("<pre></pre>").append(code_content.html(code_content)));
+              hljs.highlightBlock(jblock.get(0));
+            }
+        });
+        });
+        $(document).ready(init_fn);
+        $(window).on("load", init_fn);
+    })(jQuery, window);
+    </script>
+<script type='text/javascript' src='https://stats.wp.com/e-201919.js' async='async' defer='defer'></script>
+<script type='text/javascript'>
+	_stq = window._stq || [];
+	_stq.push([ 'view', {v:'ext',j:'1:7.2.1',blog:'64230272',post:'417',tz:'8',srv:'vinta.ws'} ]);
+	_stq.push([ 'clickTrackerInit', '64230272', '417' ]);
+</script>
+<script src="//instant.page/1.1.0" type="module" integrity="sha384-EwBObn5QAxP8f09iemwAJljc+sU+eUXeL9vSBw1eNmVarwhKk2F9vBEpaN9rsrtp"></script>
+</body>
+</html>
